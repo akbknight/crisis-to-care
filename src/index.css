@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", serif;
+
+  --color-earth-cream: #FDFBF7;
+  --color-earth-sage: #6B705C;
+  --color-earth-terracotta: #B56576;
+  --color-earth-sand: #A5A58D;
+  --color-earth-charcoal: #2C2C2C;
+}
+
+@layer base {
+  body {
+    @apply bg-earth-cream text-earth-charcoal antialiased min-h-screen font-sans selection:bg-earth-sand/30;
+  }
+  
+  h1, h2, h3, h4 {
+    @apply font-serif tracking-tight text-earth-charcoal;
+  }
+}
+
+@layer utilities {
+  .btn-primary {
+    @apply px-6 py-4 bg-earth-sage text-white rounded-2xl font-medium hover:bg-earth-sage/90 transition-all shadow-sm;
+  }
+
+  .glass-card {
+    @apply bg-white/40 backdrop-blur-md border border-white/20 rounded-3xl shadow-sm;
+  }
+}
