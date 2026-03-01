@@ -1,113 +1,144 @@
 export const MOCK_POSTS = [
   {
     id: '1',
-    author: 'First-Gen Student #47',
+    author: 'Sarah M.',
     content: "Balancing a 30-hour shift at the DAV while taking a full Kogod load is breaking me. Does anyone else feel like they're just failing everywhere?",
     timestamp: '2 hours ago',
     category: 'Money & Work',
     reactions: 12,
     openToConnect: false,
+    replies: [
+      { id: '1-1', author: 'David K.', content: "I was in your exact shoes last year. It gets better, I promise. Have you talked to your advisor about reducing your course load next semester?", timestamp: '1 hour ago' },
+      { id: '1-2', author: 'Elena R.', content: "Yes!! I'm working at the library and taking 18 credits. I feel so burnt out right now.", timestamp: '30 mins ago' }
+    ]
   },
   {
     id: '2',
-    author: 'Anonymous Eagle',
+    author: 'Jin Woo',
     content: "Visa stress is hitting different today. Every time I see an email from ISSS, my heart stops. Hard to focus on finals like this.",
     timestamp: '5 hours ago',
     category: 'International Student Support',
     reactions: 24,
     openToConnect: true,
+    replies: []
   },
   {
     id: '3',
-    author: 'First-Gen Student #12',
+    author: 'Maria G.',
     content: "Finally went to Kogod office hours today. I was so scared I'd look dumb, but the professor actually helped me map out my whole project. Small win.",
     timestamp: '1 day ago',
     category: 'Wins & Small Victories',
     reactions: 45,
     openToConnect: false,
+    replies: [
+      { id: '3-1', author: 'Alex T.', content: "That's huge! Which professor? I need to go to office hours too but I'm so nervous.", timestamp: '12 hours ago' }
+    ]
   },
   {
     id: '4',
-    author: 'Anonymous Bear',
+    author: 'Jamal W.',
     content: "Sometimes it feels like everyone at AU came here with a roadmap and a trust fund. Meanwhile, I'm just trying to figure out what a 'syllabus' is.",
     timestamp: '1 day ago',
     category: 'Belonging & Isolation',
     reactions: 56,
     openToConnect: true,
+    replies: []
   },
   {
     id: '5',
-    author: 'First-Gen Student #89',
+    author: 'Chloe P.',
     content: "My parents are so proud I'm at a 'DC school' but they don't understand that being proud doesn't help me pay for these $200 textbooks.",
     timestamp: '2 days ago',
     category: 'Money & Work',
     reactions: 31,
     openToConnect: false,
+    replies: [
+      { id: '5-1', author: 'Sam B.', content: "Check the library! They often have textbooks on reserve for 2-hour checkout. It saved me hundreds.", timestamp: '1 day ago' }
+    ]
   },
   {
     id: '6',
-    author: 'Anonymous Owl',
+    author: 'Sofia L.',
     content: "Thinking about the Center for Diversity & Inclusion (CDI) tomorrow. Has anyone gone? Is it actually safe for first-gen students?",
     timestamp: '2 days ago',
     category: 'Belonging & Isolation',
     reactions: 18,
     openToConnect: true,
+    replies: []
   },
   {
     id: '7',
-    author: 'First-Gen Student #03',
+    author: 'Michael C.',
     content: "Just got my emergency grant from AU Financial Aid! I can actually afford groceries for the next two months. Breathing for the first time in weeks.",
     timestamp: '3 days ago',
     category: 'Wins & Small Victories',
     reactions: 102,
     openToConnect: false,
+    replies: []
   },
   {
     id: '8',
-    author: 'Anonymous Fox',
+    author: 'Aisha N.',
     content: "Being an international student from Hyderabad and feeling like I have to work 10x harder just to be seen. Imposter syndrome is real.",
     timestamp: '4 days ago',
     category: 'International Student Support',
     reactions: 67,
     openToConnect: true,
+    replies: []
   },
   {
     id: '9',
-    author: 'First-Gen Student #55',
+    author: 'Kevin S.',
     content: "Missing my family's cooking so much it hurts. TDR just isn't the same when you're stressed about money and missing home.",
     timestamp: '4 days ago',
     category: 'Belonging & Isolation',
     reactions: 29,
     openToConnect: false,
+    replies: []
   },
   {
     id: '10',
-    author: 'Anonymous Wolf',
+    author: 'Taylor R.',
     content: "AU Career Center actually has first-gen mentors! Meeting mine on Tuesday. Hopeful for the first time about what happens after graduation.",
     timestamp: '5 days ago',
     category: 'Academic & Career',
     reactions: 42,
     openToConnect: false,
+    replies: []
   },
   {
     id: '11',
-    author: 'First-Gen Student #21',
+    author: 'Isabella M.',
     content: "I'm scared to ask for an extension. I don't want to seem like the 'struggling first-gen kid' but my family needs me home this weekend.",
     timestamp: '6 days ago',
     category: 'Family Expectations',
     reactions: 38,
     openToConnect: true,
+    replies: []
   },
   {
     id: '12',
-    author: 'Anonymous Hawk',
+    author: 'Jordan D.',
     content: "Reminder to everyone: You belong at AU. You earned your spot. Don't let the institutional vibe tell you otherwise.",
     timestamp: '1 week ago',
     category: 'Wins & Small Victories',
     reactions: 156,
     openToConnect: false,
+    replies: []
   }
 ];
+
+const NAMES = [
+  'Alex T.', 'Sam B.', 'Jordan D.', 'Taylor R.', 'Casey L.',
+  'Jamie M.', 'Riley C.', 'Morgan K.', 'Avery S.', 'Quinn P.',
+  'Sarah M.', 'David K.', 'Elena R.', 'Jin Woo', 'Maria G.',
+  'Jamal W.', 'Chloe P.', 'Sofia L.', 'Michael C.', 'Aisha N.',
+  'Kevin S.', 'Isabella M.'
+];
+
+export const getRandomName = () => {
+  return NAMES[Math.floor(Math.random() * NAMES.length)];
+};
 
 
 export const CATEGORIES = [

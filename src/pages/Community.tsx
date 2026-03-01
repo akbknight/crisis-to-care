@@ -2,7 +2,7 @@
 import { useState, FormEvent, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, MessageCircle, Send, Plus } from 'lucide-react';
-import { MOCK_POSTS, CATEGORIES } from '../data/mockData';
+import { MOCK_POSTS, CATEGORIES, getRandomName } from '../data/mockData';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface Post {
@@ -13,6 +13,12 @@ interface Post {
   category: string;
   reactions: number;
   openToConnect: boolean;
+  replies: {
+    id: string;
+    author: string;
+    content: string;
+    timestamp: string;
+  }[];
 }
 
 export default function Community() {
@@ -24,6 +30,10 @@ export default function Community() {
   const [openToConnect, setOpenToConnect] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showForm, setShowForm] = useState(false);
+
+  // Reply State
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [replyContent, setReplyContent] = useState('');
 
   useEffect(() => {
     const savedPosts = localStorage.getItem('c2c_posts');
@@ -54,7 +64,8 @@ export default function Community() {
         timestamp: 'Just now',
         category: selectedCategory,
         reactions: 0,
-        openToConnect
+        openToConnect,
+        replies: []
       };
 
       setPosts([post, ...posts]);
@@ -63,6 +74,27 @@ export default function Community() {
       setIsSubmitting(false);
       setShowForm(false);
     }, 800);
+  };
+
+  const handleReplySubmit = (postId: string, e: FormEvent) => {
+    e.preventDefault();
+    if (!replyContent.trim()) return;
+
+    const newReply = {
+      id: `${postId}-${Date.now()}`,
+      author: getRandomName(),
+      content: replyContent,
+      timestamp: 'Just now'
+    };
+
+    setPosts(posts.map(post =>
+      post.id === postId
+        ? { ...post, replies: [...(post.replies || []), newReply] }
+        : post
+    ));
+
+    setReplyContent('');
+    setReplyingTo(null);
   };
 
   const handleReaction = (id: string) => {
@@ -209,13 +241,89 @@ export default function Community() {
                   </span>
                 </button>
 
-                {post.openToConnect && (
-                  <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-earth-sage/5 text-earth-sage hover:bg-earth-sage/10 transition-all font-bold text-xs uppercase tracking-wider">
-                    <MessageCircle className="w-4 h-4" />
-                    Connect
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => setReplyingTo(replyingTo === post.id ? null : post.id)}
+                    className="flex items-center gap-2 group transition-all px-2"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-earth-charcoal/5 flex items-center justify-center group-hover:bg-earth-charcoal/10 transition-colors">
+                      <MessageCircle className="w-5 h-5 text-earth-charcoal/40 group-hover:text-earth-charcoal/60 transition-colors" />
+                    </div>
+                    <span className="font-bold text-sm text-earth-charcoal/60 group-hover:text-earth-charcoal/80 transition-colors uppercase tracking-wider text-[11px]">
+                      {t.community?.reply || 'Reply'} {(post.replies?.length || 0) > 0 && `(${post.replies.length})`}
+                    </span>
                   </button>
-                )}
+
+                  {post.openToConnect && (
+                    <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-earth-sage/5 text-earth-sage hover:bg-earth-sage/10 transition-all font-bold text-xs uppercase tracking-wider">
+                      <MessageCircle className="w-4 h-4" />
+                      Connect
+                    </button>
+                  )}
+                </div>
               </div>
+
+              {/* Replies Section */}
+              {((post.replies && post.replies.length > 0) || replyingTo === post.id) && (
+                <div className="pl-4 sm:pl-12 pt-4 border-t border-earth-sand/10 space-y-4">
+                  {post.replies && post.replies.map((reply) => (
+                    <motion.div
+                      key={reply.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-earth-cream/20 rounded-2xl p-5 border border-earth-sand/20 space-y-3"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 font-bold text-xs bg-earth-sage/10 text-earth-sage rounded-full flex items-center justify-center">
+                          {reply.author.split(' ').map(n => n[0]).join('').substring(0, 2)}
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-earth-charcoal text-xs">{reply.author}</h5>
+                          <span className="text-earth-charcoal/40 text-[10px] font-bold uppercase tracking-widest">{reply.timestamp}</span>
+                        </div>
+                      </div>
+                      <p className="text-earth-charcoal/80 text-sm leading-relaxed">{reply.content}</p>
+                    </motion.div>
+                  ))}
+
+                  <AnimatePresence>
+                    {replyingTo === post.id && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                      >
+                        <form onSubmit={(e) => handleReplySubmit(post.id, e)} className="flex flex-col sm:flex-row gap-3 mt-4">
+                          <input
+                            type="text"
+                            value={replyContent}
+                            onChange={(e) => setReplyContent(e.target.value)}
+                            placeholder="Add to the conversation..."
+                            className="flex-1 px-5 py-3 rounded-xl bg-earth-cream/30 border border-earth-sand/20 focus:outline-none focus:ring-2 focus:ring-earth-sage focus:border-transparent text-sm"
+                            autoFocus
+                          />
+                          <div className="flex gap-2 justify-end">
+                            <button
+                              type="button"
+                              onClick={() => { setReplyingTo(null); setReplyContent(''); }}
+                              className="px-4 py-2 text-xs font-bold text-earth-charcoal/60 hover:bg-earth-charcoal/5 rounded-xl transition-colors"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="submit"
+                              disabled={!replyContent.trim()}
+                              className="px-5 py-2 bg-earth-sage text-white text-xs font-bold rounded-xl hover:bg-earth-sage/90 disabled:opacity-50 transition-colors"
+                            >
+                              Post reply
+                            </button>
+                          </div>
+                        </form>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
             </motion.div>
           ))}
         </AnimatePresence>
